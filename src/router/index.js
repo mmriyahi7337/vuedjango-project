@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
+import Profile from '../views/Profile.vue'
 
 const routes = [
   {
@@ -16,6 +17,11 @@ const routes = [
     component: function () {
       return import(/* webpackChunkName: "about" */ '../views/About.vue')
     }
+  },
+  {
+    path: '/Profile',
+    name: 'Profile',
+    component: Profile
   }
 ]
 
