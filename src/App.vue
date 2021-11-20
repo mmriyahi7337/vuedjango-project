@@ -1,5 +1,6 @@
 <template>
   <navbar />
+  {{$store.state}}
   <router-view class="container"/>
 </template>
 
@@ -11,6 +12,14 @@ export default {
   name: 'App',
   components: {
     navbar
+  },watch:{
+    $route(){
+      this.$store.commit("onStart")
+
+    }
+  },
+  mounted(){
+    this.$store.commit("onStart")
   }
 }
 </script>
