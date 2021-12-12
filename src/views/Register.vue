@@ -1,8 +1,8 @@
 <template>
-  <div class="login">
+  <div class="Register">
     <div class="row">
       <div class="col-lg-4 mx-auto border shadow rounded p-4 mt-3">
-          <h1 class="text-center mt-3 mb-4">Login</h1>
+          <h1 class="text-center mt-3 mb-4">Register</h1>
            <form @submit.prevent="dologin">
           <div class="form-group">
             <label for="usernameInput">Username</label>
@@ -27,7 +27,19 @@
               {{passwordEM}}
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Login</button>
+          <div class="form-group">
+            <label for="passwordInput">Repeat Password</label>
+            <input type="password" class="form-control" id="passwordInput" v-model="password2"
+            :class="{
+              'is-invalid':password2E ===true,
+              'is-valid': password2E === false,
+
+            }">
+            <div class="invalid-feedback" v-if="password2E">
+              {{password2EM}}
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Register</button>
           </form>
       </div>
     </div>
@@ -36,15 +48,18 @@
 
 <script>
 export default {
-  name: 'Login',
+  name: 'Register',
     data() {
       return {
         username:'',
         password:'',
+        password2:'',
         usernameE:null,
         passwordE:null,
+        password2E:null,
         usernameEM:null,
         passwordEM:null,
+        password2EM:null,
       }
     },
   
@@ -81,6 +96,34 @@ export default {
               this.passwordE = false
               this.passwordEM =''
             }
+               if (this.password2.length<6){
+              this.password2E = true
+              this.access = false
+              if (this.password2.length ==0){
+                this.password2EM = "Repeat Password required"
+              }
+              else{
+                this.password2EM = "Repeat Password must be at least 6 char long"
+              }
+              
+            }
+            else{
+              this.password2E = false
+              this.password2EM =''
+            }
+            if (this.password2 != this.password){
+              this.password2E = true
+              this.passwordE = true
+              this.access = false
+              this.passwordEM = 'Passwords are not same'
+            }
+            else{
+                if(!this.passwordE && !this.password2E){
+              
+              this.passwordEM =''
+                }
+            }
+
            if(access){
               this.$store.commit("login",`${this.username}:${this.password}`)
             this.$router.push("/profile")
