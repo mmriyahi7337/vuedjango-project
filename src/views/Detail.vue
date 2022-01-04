@@ -10,8 +10,10 @@
     
     <div v-if="$store.state.isAuth">
       <hr>
+      
+      
       <button class="btn btn-warning mr-1" @click="edit= !edit">Edit</button>
-      <button class="btn btn-danger mr-1">Remove</button>
+      <button class="btn btn-danger mr-1" @click="doRemove">Remove</button>
       <hr class="my-4">
       <form @submit.prevent="doEdit" class="pb-5" v-if=" edit">
         <div class="form-group">
@@ -72,6 +74,16 @@ export default {
           this.article = this.articles[index]
           this.edit = false
           this.$router.push(`/article/${this.articles[index].slug}`)
+    },
+    doRemove(){
+      let index = this.articles.findIndex(
+         article => article.slug == this.$route.params.slug
+      )
+          this.articles.splice(index,1)
+
+          let databese = JSON.stringify(this.articles)
+          localStorage.setItem("articles",databese) 
+          this.$router.push(`/`)
     }
   }
   
