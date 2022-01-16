@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Login',
     data() {
@@ -82,8 +84,22 @@ export default {
               this.passwordEM =''
             }
            if(access){
-              this.$store.commit("login",`${this.username}:${this.password}`)
-            this.$router.push("/profile")
+              axios
+                .post('/api/auth/token/login/',{
+                  "password": this.password,
+                  "username": this.username
+                })
+                .then(response => {
+                  this.$store.commit("login", response.data.auth_token)
+                  this.$router.push("/profile")
+                })
+                .catch(error => {
+                  console.log(error.response.data.non_field_errors.join(" "))
+                  this.usernameEM = error.response.data.non_field_errors.join(" ")
+                  this.usernameE = true
+                  this.passwordE = true
+                })
+              
            }
 
         }
