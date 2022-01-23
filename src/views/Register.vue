@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Register',
     data() {
@@ -88,7 +90,7 @@ export default {
                 this.passwordEM = "Password required"
               }
               else{
-                this.passwordEM = "Password must be at least 6 char long"
+                this.passwordEM = "Password must be at least 8 char long"
               }
               
             }
@@ -103,7 +105,7 @@ export default {
                 this.password2EM = "Repeat Password required"
               }
               else{
-                this.password2EM = "Repeat Password must be at least 6 char long"
+                this.password2EM = "Repeat Password must be at least 8 char long"
               }
               
             }
@@ -125,8 +127,28 @@ export default {
             }
 
            if(access){
-              this.$store.commit("login",`${this.username}:${this.password}`)
-            this.$router.push("/profile")
+                axios
+                .post('/api/auth/users/',{
+                  "password": this.password,
+                  "username": this.username
+                })
+                .then(response => {
+                  this.$router.push("/login")
+                  console.log(response)
+                })
+                .catch(error => {
+                  console.log(error.response.data)
+                  if (error.response.data.username){
+                    this.usernameE = true
+                    this.usernameEM = error.response.data.username.join(" ")
+                  }else{
+                    this.password2E = true
+                    this.passwordE = true
+                    this.passwordEM = error.response.data.password.join(" ")
+                    this.password2EM = error.response.data.password.join(" ")
+                    }
+                })
+              
            }
 
         }
