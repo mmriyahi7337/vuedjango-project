@@ -1,18 +1,38 @@
 <template>
   <div class="logout">
     <h1>Login</h1>
-    <button class="btn btn-danger" @click="dologin">Logout</button>
+    <div class="alert alert-danger" v-if="logoutError">
+      {{logoutError}}
+    </div>
+    <button class="btn btn-danger" @click="dologout">Logout</button>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Logout',
-  
+  data () {
+    return{
+        logoutError:''
+    }
+  },
     methods:{
-        dologin(){
-            this.$store.commit("logout")
-            this.$router.push("/Login")
+        dologout(){
+          axios
+                .post('/api/auth/token/logout/')
+                .then(response => {
+                  this.$store.commit("logout")
+                  this.$router.push("/Login")
+                  console.log(response)
+                })
+                .catch(error => {
+                  console.log(error.response.data)
+                  this.logoutError = error.response.data.detail
+                })
+              
+            
         }
     }
   
